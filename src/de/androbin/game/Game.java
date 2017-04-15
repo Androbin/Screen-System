@@ -4,9 +4,8 @@ import de.androbin.game.listener.*;
 import de.androbin.gfx.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;;
 
-public final class Game extends CustomPane implements Serializable
+public final class Game extends CustomPane
 {
 	public final GameScreenManager			gsm;
 	public final GameMouseMotionListener	mml;
