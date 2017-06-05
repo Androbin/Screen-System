@@ -25,7 +25,7 @@ public abstract class Screen implements Context, InputListener, Renderable {
     return width;
   }
   
-  protected abstract void onResized( final int width, final int height );
+  protected abstract void onResized( int width, int height );
   
   protected final void pause() {
     if ( started && active ) {
@@ -55,7 +55,7 @@ public abstract class Screen implements Context, InputListener, Renderable {
     }
   }
   
-  protected abstract void update( final float delta );
+  protected abstract void update( float delta );
   
   protected final void updateSize() {
     final int width = game.getWidth();

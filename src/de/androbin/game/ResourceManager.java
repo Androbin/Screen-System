@@ -4,19 +4,19 @@ import java.awt.*;
 import javax.sound.sampled.*;
 
 public interface ResourceManager<K> {
-  Image getImage( final K key );
+  Image getImage( K key );
   
-  Clip getSound( final K key );
+  Clip getSound( K key );
   
-  void loadImage( final K key, final String path );
+  void loadImage( K key, String path );
   
-  void loadSound( final K key, final String path );
+  void loadSound( K key, String path );
   
-  void loopSound( final K key, final int loop );
+  void loopSound( K key, int loop );
   
-  void playSound( final K key );
+  void playSound( K key );
   
-  void stopSound( final K key );
+  void stopSound( K key );
   
   void stopSounds();
 }
