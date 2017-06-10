@@ -7,10 +7,10 @@ import java.util.*;
 import javax.sound.sampled.*;
 
 public final class DefaultResourceManager<K> implements ResourceManager<K> {
-  private final Map<K, Image> images = new HashMap<K, Image>();
-  private final Map<K, Clip> sounds = new HashMap<K, Clip>();
+  private final Map<K, Image> images = new HashMap<>();
+  private final Map<K, Clip> sounds = new HashMap<>();
   
-  private final Set<Clip> active_sounds = new HashSet<Clip>();
+  private final Set<Clip> active_sounds = new HashSet<>();
   
   @ Override
   public Image getImage( final K key ) {

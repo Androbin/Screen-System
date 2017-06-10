@@ -3,7 +3,7 @@ package de.androbin.game;
 import java.util.*;
 
 public final class DefaultScreenManager implements ScreenManager {
-  private final List<Screen> screens = new ArrayList<Screen>();
+  private final List<Screen> screens = new ArrayList<>();
   
   @ Override
   public Screen callScreen( final Screen screen ) {
