@@ -42,10 +42,10 @@ public final class GameScreenUpdater {
     
     if ( ts.screen != null ) {
       switch ( ts.type ) {
-        case CALL :
-        case SWITCH :
+        case CALL:
+        case SWITCH:
           ts.screen.start();
-        case CLOSE :
+        case CLOSE:
           ts.screen.resume();
           break;
       }
@@ -59,13 +59,13 @@ public final class GameScreenUpdater {
       ts.progress = 1f;
       
       switch ( ts.type ) {
-        case CALL :
+        case CALL:
           gsm.call( ts.screen );
           break;
-        case CLOSE :
+        case CLOSE:
           gsm.close();
           break;
-        case SWITCH :
+        case SWITCH:
           gsm.switchTo( ts.screen );
           break;
       }
