@@ -10,7 +10,7 @@ public final class DefaultResourceManager<K> implements ResourceManager<K> {
   private final Map<K, Image> images = new HashMap<>();
   private final Map<K, Clip> sounds = new HashMap<>();
   
-  private final Set<Clip> active_sounds = new HashSet<>();
+  private final Set<Clip> activeSounds = new HashSet<>();
   
   @ Override
   public Image getImage( final K key ) {
@@ -41,7 +41,7 @@ public final class DefaultResourceManager<K> implements ResourceManager<K> {
       return;
     }
     
-    active_sounds.add( sound );
+    activeSounds.add( sound );
     sound.setFramePosition( 0 );
     sound.loop( loop );
   }
@@ -55,7 +55,7 @@ public final class DefaultResourceManager<K> implements ResourceManager<K> {
       return;
     }
     
-    active_sounds.add( sound );
+    activeSounds.add( sound );
     sound.setFramePosition( 0 );
     sound.start();
   }
@@ -70,12 +70,12 @@ public final class DefaultResourceManager<K> implements ResourceManager<K> {
     }
     
     sound.stop();
-    active_sounds.remove( sound );
+    activeSounds.remove( sound );
   }
   
   @ Override
   public void stopSounds() {
-    active_sounds.parallelStream().forEach( Clip::stop );
-    active_sounds.clear();
+    activeSounds.forEach( Clip::stop );
+    activeSounds.clear();
   }
 }
