@@ -18,7 +18,7 @@ public final class GameMouseWheelListener implements MouseWheelListener {
       return;
     }
     
-    final MouseWheelListener listener = screen.getMouseWheelListener();
+    final MouseWheelListener listener = screen.inputs.mouseWheel;
     
     if ( listener == null ) {
       return;

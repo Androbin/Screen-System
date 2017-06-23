@@ -18,7 +18,7 @@ public final class GameKeyListener implements KeyListener {
       return;
     }
     
-    final KeyListener listener = screen.getKeyListener();
+    final KeyListener listener = screen.inputs.keyboard;
     
     if ( listener == null ) {
       return;
@@ -35,7 +35,7 @@ public final class GameKeyListener implements KeyListener {
       return;
     }
     
-    final KeyListener listener = screen.getKeyListener();
+    final KeyListener listener = screen.inputs.keyboard;
     
     if ( listener == null ) {
       return;
@@ -52,7 +52,7 @@ public final class GameKeyListener implements KeyListener {
       return;
     }
     
-    final KeyListener listener = screen.getKeyListener();
+    final KeyListener listener = screen.inputs.keyboard;
     
     if ( listener == null ) {
       return;

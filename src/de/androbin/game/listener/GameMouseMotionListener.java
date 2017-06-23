@@ -24,7 +24,7 @@ public final class GameMouseMotionListener implements MouseMotionListener {
       return;
     }
     
-    final MouseMotionListener listener = screen.getMouseMotionListener();
+    final MouseMotionListener listener = screen.inputs.mouseMotion;
     
     if ( listener == null ) {
       return;
@@ -41,7 +41,7 @@ public final class GameMouseMotionListener implements MouseMotionListener {
       return;
     }
     
-    final MouseMotionListener listener = screen.getMouseMotionListener();
+    final MouseMotionListener listener = screen.inputs.mouseMotion;
     
     if ( listener == null ) {
       return;

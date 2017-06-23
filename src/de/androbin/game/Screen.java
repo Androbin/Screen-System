@@ -3,8 +3,9 @@ package de.androbin.game;
 import de.androbin.game.listener.*;
 import de.androbin.gfx.*;
 
-public abstract class Screen implements Context, InputListener, Renderable {
+public abstract class Screen implements Context, Renderable {
   protected final Game game;
+  public final Inputs inputs;
   
   private int width;
   private int height;
@@ -14,6 +15,7 @@ public abstract class Screen implements Context, InputListener, Renderable {
   
   public Screen( final Game game ) {
     this.game = game;
+    this.inputs = new Inputs();
     updateSize();
   }
   

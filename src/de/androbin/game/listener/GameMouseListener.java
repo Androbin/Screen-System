@@ -18,7 +18,7 @@ public final class GameMouseListener implements MouseListener {
       return;
     }
     
-    final MouseListener listener = screen.getMouseListener();
+    final MouseListener listener = screen.inputs.mouse;
     
     if ( listener == null ) {
       return;
@@ -35,7 +35,7 @@ public final class GameMouseListener implements MouseListener {
       return;
     }
     
-    final MouseListener listener = screen.getMouseListener();
+    final MouseListener listener = screen.inputs.mouse;
     
     if ( listener == null ) {
       return;
@@ -52,7 +52,7 @@ public final class GameMouseListener implements MouseListener {
       return;
     }
     
-    final MouseListener listener = screen.getMouseListener();
+    final MouseListener listener = screen.inputs.mouse;
     
     if ( listener == null ) {
       return;
@@ -69,7 +69,7 @@ public final class GameMouseListener implements MouseListener {
       return;
     }
     
-    final MouseListener listener = screen.getMouseListener();
+    final MouseListener listener = screen.inputs.mouse;
     
     if ( listener == null ) {
       return;
@@ -86,7 +86,7 @@ public final class GameMouseListener implements MouseListener {
       return;
     }
     
-    final MouseListener listener = screen.getMouseListener();
+    final MouseListener listener = screen.inputs.mouse;
     
     if ( listener == null ) {
       return;
