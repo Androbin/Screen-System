@@ -94,10 +94,8 @@ public final class GameScreenManager implements Renderable {
       }
       
       ts.transition.render( g, image1, image2, ts.progress );
-    } else {
-      if ( active() != null ) {
-        active().render( g );
-      }
+    } else if ( active() != null ) {
+      active().render( g );
     }
   }
   

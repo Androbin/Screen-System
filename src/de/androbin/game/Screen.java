@@ -16,7 +16,6 @@ public abstract class Screen implements Context, Renderable {
   public Screen( final Game game ) {
     this.game = game;
     this.inputs = new Inputs();
-    updateSize();
   }
   
   public final int getHeight() {
