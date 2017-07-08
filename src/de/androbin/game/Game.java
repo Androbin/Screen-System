@@ -10,11 +10,11 @@ public final class Game extends CustomPane {
   public final GameMouseMotionListener mml;
   
   public Game() {
-    this( 20L );
+    this( 50 );
   }
   
-  public Game( final long delay ) {
-    this.delayMilli = delay;
+  public Game( final int fps ) {
+    super( fps );
     
     gsm = new GameScreenManager( this );
     
