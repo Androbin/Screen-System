@@ -1,120 +1,212 @@
 package de.androbin.game;
 
+import de.androbin.game.transition.*;
 import de.androbin.gfx.*;
-import de.androbin.gfx.transition.*;
 import java.awt.*;
-import java.awt.image.*;
+import java.util.function.*;
 
-public final class GameScreenManager implements Renderable {
-  private final Game game;
-  public final ScreenManager sm = new DefaultScreenManager();
-  private final TransitionState ts = new TransitionState();
-  public final GameScreenUpdater gsu = new GameScreenUpdater( this, ts );
+public final class GameScreenManager extends SimpleScreenManager implements Renderable {
+  private TransitionState transit;
   
-  public GameScreenManager( final Game game ) {
-    this.game = game;
+  private final Supplier<Dimension> sizing;
+  private final Runnable exit;
+  
+  public GameScreenManager( final Supplier<Dimension> sizing, final Runnable exit ) {
+    this.sizing = sizing;
+    this.exit = exit;
   }
   
+  @ Override
   public Screen call( final Screen screen ) {
-    if ( ts.crossfading && ts.progress < 1f || screen == null ) {
-      return active();
+    if ( screen != null ) {
+      screen.updateSize();
     }
     
-    resize( screen );
-    return sm.callScreen( screen );
+    return super.call( screen );
   }
   
+  @ Override
   public Screen close() {
-    resize( sm.previousScreen() );
-    final Screen screen = sm.closeScreen();
+    final Screen screen0 = previous();
     
-    if ( active() == null ) {
-      game.stop();
+    if ( screen0 != null ) {
+      screen0.updateSize();
+    }
+    
+    final Screen screen = super.close();
+    
+    if ( current() == null ) {
+      exit.run();
     }
     
     return screen;
   }
   
-  private void crossfade( final Transition.Type type, final Screen screen,
-      final Transition crossfade, final float duration ) {
-    if ( !ts.crossfading || ts.progress >= 1f ) {
-      ts.crossfading = false;
-      resize( screen );
-      ts.type = type;
-      ts.screen = screen;
-      ts.transition = crossfade;
-      ts.speed = 1f / duration;
-      ts.progress = 0f;
-      ts.crossed = false;
-      ts.crossfading = true;
+  private boolean crossfade( final Transition.Type type, final Transition crossfade,
+      final Screen screen ) {
+    if ( transit != null ) {
+      return false;
     }
-  }
-  
-  public void crossfadeCall( final Screen screen, final Transition crossfade,
-      final float duration ) {
+    
+    final TransitionState transit = new TransitionState();
+    
+    transit.type = type;
+    transit.transition = crossfade;
+    
     if ( screen != null ) {
-      crossfade( Transition.Type.CALL, screen, crossfade, duration );
+      screen.updateSize();
+      screen.start();
     }
+    
+    transit.screen0 = current();
+    transit.screen1 = screen;
+    
+    this.transit = transit;
+    return true;
   }
   
-  public void crossfadeClose( final Transition crossfade, final float duration ) {
-    crossfade( Transition.Type.CLOSE, sm.previousScreen(), crossfade, duration );
-  }
-  
-  public void crossfadeSwitch( final Screen screen, final Transition crossfade,
-      final float duration ) {
+  public boolean crossfadeCall( final Screen screen, final Transition crossfade ) {
     if ( screen == null ) {
-      crossfade( Transition.Type.CLOSE, null, crossfade, duration );
+      return true;
     } else {
-      crossfade( Transition.Type.SWITCH, screen, crossfade, duration );
+      return crossfade( Transition.Type.CALL, crossfade, screen );
     }
   }
   
-  public Screen active() {
-    return ts.crossfading && ts.crossed ? ts.screen : sm.currentScreen();
+  public boolean crossfadeClose( final Transition crossfade ) {
+    return crossfade( Transition.Type.CLOSE, crossfade, previous() );
+  }
+  
+  public boolean crossfadeSwitch( final Screen screen, final Transition crossfade ) {
+    if ( screen == null ) {
+      return crossfade( Transition.Type.CLOSE, crossfade, null );
+    } else {
+      return crossfade( Transition.Type.SWITCH, crossfade, screen );
+    }
+  }
+  
+  private void doTransition() {
+    final Screen screen0 = transit.screen0;
+    
+    if ( screen0 != null ) {
+      screen0.pause();
+      
+      switch ( transit.type ) {
+        case CLOSE:
+        case SWITCH:
+          unset();
+        case CALL:
+      }
+    }
+    
+    final Screen screen1 = transit.screen1;
+    
+    if ( screen1 != null ) {
+      screen1.resume();
+      
+      switch ( transit.type ) {
+        case CALL:
+        case SWITCH:
+          set( screen1 );
+        case CLOSE:
+      }
+    }
+  }
+  
+  private void finishTransition() {
+    final Screen screen0 = transit.screen0;
+    
+    if ( screen0 == null ) {
+      return;
+    }
+    
+    switch ( transit.type ) {
+      case CLOSE:
+      case SWITCH:
+        screen0.stop();
+      case CALL:
+    }
   }
   
   @ Override
   public void render( final Graphics2D g ) {
-    if ( ts.crossfading ) {
-      final Screen screen1 = sm.currentScreen();
-      final Screen screen2 = ts.screen;
+    if ( transit == null ) {
+      final Screen screen = current();
       
-      final BufferedImage image1 = new BufferedImage( game.getWidth(), game.getHeight(),
-          BufferedImage.TYPE_INT_RGB );
-      final BufferedImage image2 = new BufferedImage( game.getWidth(), game.getHeight(),
-          BufferedImage.TYPE_INT_RGB );
-      
-      if ( screen1 != null ) {
-        screen1.render( image1.createGraphics() );
+      if ( screen != null ) {
+        screen.render( g );
       }
+    } else {
+      final Screen screen0 = transit.screen0;
+      final Screen screen1 = transit.screen1;
       
-      if ( screen2 != null ) {
-        screen2.render( image2.createGraphics() );
-      }
+      final Dimension size = sizing.get();
       
-      ts.transition.render( g, image1, image2, ts.progress );
-    } else if ( active() != null ) {
-      active().render( g );
+      transit.transition.render( g, size, screen0, screen1 );
     }
   }
   
-  public void resize( final Screen screen ) {
+  public void resize() {
+    if ( transit == null ) {
+      final Screen screen = current();
+      
+      if ( screen != null ) {
+        screen.updateSize();
+      }
+    } else {
+      final Screen screen0 = transit.screen0;
+      
+      if ( screen0 != null ) {
+        screen0.updateSize();
+      }
+      
+      final Screen screen1 = transit.screen1;
+      
+      if ( screen1 != null ) {
+        screen1.updateSize();
+      }
+    }
+  }
+  
+  @ Override
+  public Screen switchTo( final Screen screen ) {
     if ( screen != null ) {
       screen.updateSize();
     }
+    
+    return super.switchTo( screen );
   }
   
-  public Screen switchTo( final Screen screen ) {
-    if ( ts.crossfading && ts.progress < 1f ) {
-      return active();
+  public void update( final float delta ) {
+    if ( transit == null ) {
+      final Screen screen = current();
+      
+      if ( screen != null ) {
+        screen.update( delta );
+      }
+    } else {
+      final Screen screen0 = transit.screen0;
+      
+      if ( screen0 != null ) {
+        screen0.update( delta );
+      }
+      
+      final Screen screen1 = transit.screen1;
+      
+      if ( screen1 != null ) {
+        screen1.update( delta );
+      }
+      
+      transit.transition.update( delta );
+      
+      if ( transit.checkCrossed() ) {
+        doTransition();
+      }
+      
+      if ( transit.hasFinished() ) {
+        finishTransition();
+        transit = null;
+      }
     }
-    
-    if ( screen == null ) {
-      return close();
-    }
-    
-    resize( screen );
-    return sm.switchScreen( screen );
   }
 }

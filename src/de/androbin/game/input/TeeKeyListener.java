@@ -1,4 +1,4 @@
-package de.androbin.game.listener;
+package de.androbin.game.input;
 
 import java.awt.event.*;
 

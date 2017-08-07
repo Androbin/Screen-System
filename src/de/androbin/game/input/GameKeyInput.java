@@ -1,18 +1,19 @@
-package de.androbin.game.listener;
+package de.androbin.game.input;
 
 import de.androbin.game.*;
 import java.awt.event.*;
+import java.util.function.*;
 
-public final class GameKeyListener implements KeyListener {
-  private final GameScreenManager sm;
+public final class GameKeyInput implements KeyListener {
+  private final Supplier<Screen> screen;
   
-  public GameKeyListener( final GameScreenManager sm ) {
-    this.sm = sm;
+  public GameKeyInput( final Supplier<Screen> screen ) {
+    this.screen = screen;
   }
   
   @ Override
   public void keyPressed( final KeyEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -20,16 +21,14 @@ public final class GameKeyListener implements KeyListener {
     
     final KeyListener listener = screen.inputs.keyboard;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.keyPressed( event );
     }
-    
-    listener.keyPressed( event );
   }
   
   @ Override
   public void keyReleased( final KeyEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -37,16 +36,14 @@ public final class GameKeyListener implements KeyListener {
     
     final KeyListener listener = screen.inputs.keyboard;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.keyReleased( event );
     }
-    
-    listener.keyReleased( event );
   }
   
   @ Override
   public void keyTyped( final KeyEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -54,10 +51,8 @@ public final class GameKeyListener implements KeyListener {
     
     final KeyListener listener = screen.inputs.keyboard;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.keyTyped( event );
     }
-    
-    listener.keyTyped( event );
   }
 }

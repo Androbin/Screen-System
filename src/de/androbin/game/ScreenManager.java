@@ -1,13 +1,13 @@
 package de.androbin.game;
 
 public interface ScreenManager {
-  Screen callScreen( Screen screen );
+  Screen call( Screen screen );
   
-  Screen closeScreen();
+  Screen close();
   
-  Screen currentScreen();
+  Screen current();
   
-  Screen previousScreen();
+  Screen previous();
   
-  Screen switchScreen( Screen screen );
+  Screen switchTo( Screen screen );
 }

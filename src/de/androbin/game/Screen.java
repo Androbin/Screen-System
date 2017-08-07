@@ -1,10 +1,10 @@
 package de.androbin.game;
 
-import de.androbin.game.listener.*;
+import de.androbin.game.input.*;
 import de.androbin.gfx.*;
 
 public abstract class Screen implements Context, Renderable {
-  protected final Game game;
+  protected final transient Game game;
   public final Inputs inputs;
   
   private int width;

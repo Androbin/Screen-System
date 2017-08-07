@@ -1,18 +1,19 @@
-package de.androbin.game.listener;
+package de.androbin.game.input;
 
 import de.androbin.game.*;
 import java.awt.event.*;
+import java.util.function.*;
 
-public final class GameMouseListener implements MouseListener {
-  private final GameScreenManager sm;
+public final class GameMouseInput implements MouseListener {
+  private final Supplier<Screen> screen;
   
-  public GameMouseListener( final GameScreenManager sm ) {
-    this.sm = sm;
+  public GameMouseInput( final Supplier<Screen> screen ) {
+    this.screen = screen;
   }
   
   @ Override
   public void mouseClicked( final MouseEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -20,16 +21,14 @@ public final class GameMouseListener implements MouseListener {
     
     final MouseListener listener = screen.inputs.mouse;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.mouseClicked( event );
     }
-    
-    listener.mouseClicked( event );
   }
   
   @ Override
   public void mouseEntered( final MouseEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -37,16 +36,14 @@ public final class GameMouseListener implements MouseListener {
     
     final MouseListener listener = screen.inputs.mouse;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.mouseEntered( event );
     }
-    
-    listener.mouseEntered( event );
   }
   
   @ Override
   public void mouseExited( final MouseEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -54,16 +51,14 @@ public final class GameMouseListener implements MouseListener {
     
     final MouseListener listener = screen.inputs.mouse;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.mouseExited( event );
     }
-    
-    listener.mouseExited( event );
   }
   
   @ Override
   public void mousePressed( final MouseEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -71,16 +66,14 @@ public final class GameMouseListener implements MouseListener {
     
     final MouseListener listener = screen.inputs.mouse;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.mousePressed( event );
     }
-    
-    listener.mousePressed( event );
   }
   
   @ Override
   public void mouseReleased( final MouseEvent event ) {
-    final Screen screen = sm.active();
+    final Screen screen = this.screen.get();
     
     if ( screen == null ) {
       return;
@@ -88,10 +81,8 @@ public final class GameMouseListener implements MouseListener {
     
     final MouseListener listener = screen.inputs.mouse;
     
-    if ( listener == null ) {
-      return;
+    if ( listener != null ) {
+      listener.mouseReleased( event );
     }
-    
-    listener.mouseReleased( event );
   }
 }

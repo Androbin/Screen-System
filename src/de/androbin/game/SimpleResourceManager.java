@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.*;
 import javax.sound.sampled.*;
 
-public final class DefaultResourceManager<K> implements ResourceManager<K> {
+public final class SimpleResourceManager<K> implements ResourceManager<K> {
   private final Map<K, Image> images = new HashMap<>();
   private final Map<K, Clip> sounds = new HashMap<>();
   
@@ -58,6 +58,11 @@ public final class DefaultResourceManager<K> implements ResourceManager<K> {
     activeSounds.add( sound );
     sound.setFramePosition( 0 );
     sound.start();
+  }
+  
+  @ Override
+  public void release() {
+    sounds.values().forEach( Clip::close );
   }
   
   @ Override

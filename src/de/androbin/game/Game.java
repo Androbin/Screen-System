@@ -1,58 +1,48 @@
 package de.androbin.game;
 
-import de.androbin.game.listener.*;
+import de.androbin.game.input.*;
 import de.androbin.gfx.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.function.*;
 
 public final class Game extends CustomPane {
-  public final GameScreenManager gsm;
-  public final GameMouseMotionListener mml;
+  public final GameScreenManager screens;
+  public final Inputs inputs;
   
   public Game() {
-    this( 50 );
-  }
-  
-  public Game( final int fps ) {
-    super( fps );
+    screens = new GameScreenManager( this::getSize, this::stop );
+    inputs = new Inputs();
     
-    gsm = new GameScreenManager( this );
+    final Supplier<Screen> screen = screens::current;
     
-    addKeyListener( new GameKeyListener( gsm ) );
-    addMouseListener( new GameMouseListener( gsm ) );
-    addMouseMotionListener( mml = new GameMouseMotionListener( gsm ) );
-    addMouseWheelListener( new GameMouseWheelListener( gsm ) );
+    addKeyListener( inputs.keyboard = new GameKeyInput( screen ) );
+    addMouseListener( inputs.mouse = new GameMouseInput( screen ) );
+    addMouseMotionListener( inputs.mouseMotion = new GameMouseMotionInput( screen ) );
+    addMouseWheelListener( inputs.mouseWheel = new GameMouseWheelInput( screen ) );
     addComponentListener( new ComponentAdapter() {
       @ Override
       public void componentResized( final ComponentEvent event ) {
-        gsm.resize( gsm.active() );
+        screens.resize();
       }
     } );
   }
   
-  @ Override
-  protected void destroy() {
-    while ( gsm.sm.currentScreen() != null ) {
-      gsm.sm.closeScreen();
-    }
+  public Game( final int fps ) {
+    this();
+    setFPS( fps );
   }
   
   @ Override
-  public Point getMousePosition() {
-    return mml.getMousePosition();
+  protected void destroy() {
+    while ( screens.current() != null ) {
+      screens.close();
+    }
   }
   
   @ Override
   public void render( final Graphics2D g ) {
-    gsm.render( g );
-  }
-  
-  public void start() {
-    if ( gsm.active() != null ) {
-      gsm.active().start();
-    }
-    
-    start( "2D Game Engine" );
+    screens.render( g );
   }
   
   public void stop() {
@@ -61,6 +51,6 @@ public final class Game extends CustomPane {
   
   @ Override
   protected void update( final float delta ) {
-    gsm.gsu.update( delta );
+    screens.update( delta );
   }
 }

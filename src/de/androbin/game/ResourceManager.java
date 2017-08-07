@@ -16,6 +16,8 @@ public interface ResourceManager<K> {
   
   void playSound( K key );
   
+  void release();
+  
   void stopSound( K key );
   
   void stopSounds();
