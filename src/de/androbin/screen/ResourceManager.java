@@ -1,4 +1,4 @@
-package de.androbin.game;
+package de.androbin.screen;
 
 import java.awt.*;
 import javax.sound.sampled.*;

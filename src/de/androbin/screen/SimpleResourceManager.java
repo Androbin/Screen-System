@@ -1,4 +1,4 @@
-package de.androbin.game;
+package de.androbin.screen;
 
 import de.androbin.gfx.util.*;
 import de.androbin.util.*;

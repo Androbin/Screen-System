@@ -1,13 +1,13 @@
-package de.androbin.game.transition;
+package de.androbin.screen.transit;
 
-import de.androbin.game.*;
+import de.androbin.shell.*;
 
-public final class TransitionState {
+public final class TransitionState<T extends Transition> {
   public Transition.Type type;
-  public Transition transition;
+  public T transition;
   
-  public Screen screen0;
-  public Screen screen1;
+  public Shell screen0;
+  public Shell screen1;
   
   private boolean crossed;
   
