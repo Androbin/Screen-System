@@ -32,34 +32,6 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
     return screen;
   }
   
-  private void doTransition() {
-    final Shell screen0 = transit.screen0;
-    
-    if ( screen0 != null ) {
-      screen0.onPaused();
-      
-      switch ( transit.type ) {
-        case CLOSE:
-        case SWITCH:
-          unset();
-        case CALL:
-      }
-    }
-    
-    final Shell screen1 = transit.screen1;
-    
-    if ( screen1 != null ) {
-      screen1.onResumed();
-      
-      switch ( transit.type ) {
-        case CALL:
-        case SWITCH:
-          set( screen1 );
-        case CLOSE:
-      }
-    }
-  }
-  
   private boolean fade( final Transition.Type type, final T crossfade,
       final Shell screen ) {
     if ( transit != null ) {
@@ -100,21 +72,6 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
       return fade( Transition.Type.CLOSE, crossfade, null );
     } else {
       return fade( Transition.Type.SWITCH, crossfade, screen );
-    }
-  }
-  
-  private void finishTransition() {
-    final Shell screen0 = transit.screen0;
-    
-    if ( screen0 == null ) {
-      return;
-    }
-    
-    switch ( transit.type ) {
-      case CLOSE:
-      case SWITCH:
-        screen0.onStopped();
-      case CALL:
     }
   }
   
@@ -175,15 +132,75 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
         screen1.update( delta );
       }
       
-      transit.transition.update( delta );
-      
-      if ( transit.checkCrossed() ) {
-        doTransition();
+      updateTransition( delta );
+    }
+  }
+  
+  private void updateTransition( final float delta ) {
+    transit.transition.update( delta );
+    
+    final Shell screen0 = transit.screen0;
+    final Shell screen1 = transit.screen1;
+    
+    if ( transit.checkCrossed() ) {
+      if ( screen0 != null ) {
+        screen0.onPaused();
+        
+        switch ( transit.type ) {
+          case CLOSE:
+          case SWITCH:
+            unset();
+          case CALL:
+        }
       }
       
-      if ( transit.hasFinished() ) {
-        finishTransition();
-        transit = null;
+      if ( screen1 != null ) {
+        screen1.onResumed();
+        
+        switch ( transit.type ) {
+          case CALL:
+          case SWITCH:
+            set( screen1 );
+          case CLOSE:
+        }
+      }
+    }
+    
+    if ( transit.hasFinished() ) {
+      if ( screen0 == null ) {
+        return;
+      }
+      
+      switch ( transit.type ) {
+        case CLOSE:
+        case SWITCH:
+          screen0.onStopped();
+        case CALL:
+      }
+      
+      transit = null;
+    }
+  }
+  
+  @ Override
+  public void updateUI( final float delta ) {
+    if ( transit == null ) {
+      final Shell screen = current();
+      
+      if ( screen != null ) {
+        screen.updateUI( delta );
+      }
+    } else {
+      final Shell screen0 = transit.screen0;
+      
+      if ( screen0 != null ) {
+        screen0.updateUI( delta );
+      }
+      
+      final Shell screen1 = transit.screen1;
+      
+      if ( screen1 != null ) {
+        screen1.updateUI( delta );
       }
     }
   }
