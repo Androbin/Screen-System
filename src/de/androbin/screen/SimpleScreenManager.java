@@ -11,10 +11,10 @@ public abstract class SimpleScreenManager extends BasicShell implements ScreenMa
   public SimpleScreenManager() {
     final Supplier<Shell> screen = this::current;
     
-    addKeyInput( new KeyInputSupply( screen ) );
-    addMouseInput( new MouseInputSupply( screen ) );
-    addMouseMotionInput( new MouseMotionInputSupply( screen ) );
-    addMouseWheelInput( new MouseWheelInputSupply( screen ) );
+    addKeyInput( KeyInputSupply.fromShell( screen ) );
+    addMouseInput( MouseInputSupply.fromShell( screen ) );
+    addMouseMotionInput( MouseMotionInputSupply.fromShell( screen ) );
+    addMouseWheelInput( MouseWheelInputSupply.fromShell( screen ) );
   }
   
   @ Override
