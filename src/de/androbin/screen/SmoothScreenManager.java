@@ -58,9 +58,9 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
   public boolean fadeCall( final Shell screen, final T crossfade ) {
     if ( screen == null ) {
       return true;
-    } else {
-      return fade( Transition.Type.CALL, crossfade, screen );
     }
+    
+    return fade( Transition.Type.CALL, crossfade, screen );
   }
   
   public boolean fadeClose( final T crossfade ) {
@@ -68,11 +68,11 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
   }
   
   public boolean fadeSwitchTo( final Shell screen, final T crossfade ) {
-    if ( screen == null ) {
-      return fade( Transition.Type.CLOSE, crossfade, null );
-    } else {
-      return fade( Transition.Type.SWITCH, crossfade, screen );
-    }
+    return fade( Transition.Type.SWITCH, crossfade, screen );
+  }
+  
+  public boolean isFading() {
+    return transit != null;
   }
   
   @ Override
@@ -113,25 +113,9 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
   
   @ Override
   public void update( final float delta ) {
-    if ( transit == null ) {
-      final Shell screen = current();
-      
-      if ( screen != null ) {
-        screen.update( delta );
-      }
-    } else {
-      final Shell screen0 = transit.screen0;
-      
-      if ( screen0 != null ) {
-        screen0.update( delta );
-      }
-      
-      final Shell screen1 = transit.screen1;
-      
-      if ( screen1 != null ) {
-        screen1.update( delta );
-      }
-      
+    super.update( delta );
+    
+    if ( transit != null ) {
       updateTransition( delta );
     }
   }
@@ -179,29 +163,6 @@ public class SmoothScreenManager<T extends Transition> extends SimpleScreenManag
       }
       
       transit = null;
-    }
-  }
-  
-  @ Override
-  public void updateUI( final float delta ) {
-    if ( transit == null ) {
-      final Shell screen = current();
-      
-      if ( screen != null ) {
-        screen.updateUI( delta );
-      }
-    } else {
-      final Shell screen0 = transit.screen0;
-      
-      if ( screen0 != null ) {
-        screen0.updateUI( delta );
-      }
-      
-      final Shell screen1 = transit.screen1;
-      
-      if ( screen1 != null ) {
-        screen1.updateUI( delta );
-      }
     }
   }
 }

@@ -122,4 +122,13 @@ public abstract class SimpleScreenManager extends BasicShell implements ScreenMa
       screen.update( delta );
     }
   }
+  
+  @ Override
+  public void updateUI( final float delta ) {
+    final Shell screen = current();
+    
+    if ( screen != null ) {
+      screen.updateUI( delta );
+    }
+  }
 }
