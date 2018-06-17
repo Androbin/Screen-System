@@ -5,16 +5,12 @@ import de.androbin.shell.input.supply.*;
 import java.util.*;
 import java.util.function.*;
 
-public abstract class SimpleScreenManager extends BasicShell implements ScreenManager {
+public abstract class SimpleScreenManager extends AbstractShell implements ScreenManager {
   private final List<Shell> screens = new ArrayList<>();
   
   public SimpleScreenManager() {
     final Supplier<Shell> screen = this::current;
-    
-    keyInputs.add( KeyInputSupply.fromShell( screen ) );
-    mouseInputs.add( MouseInputSupply.fromShell( screen ) );
-    mouseMotionInputs.add( MouseMotionInputSupply.fromShell( screen ) );
-    mouseWheelInputs.add( MouseWheelInputSupply.fromShell( screen ) );
+    InputSupplies.putShellTee( getInputs(), screen );
   }
   
   @ Override
