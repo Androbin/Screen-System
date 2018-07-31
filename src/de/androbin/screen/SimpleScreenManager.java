@@ -26,6 +26,7 @@ public abstract class SimpleScreenManager extends AbstractShell implements Scree
     }
     
     if ( screen0 != null ) {
+      screen0.onBeforePaused();
       screen0.onPaused();
     }
     
@@ -47,6 +48,7 @@ public abstract class SimpleScreenManager extends AbstractShell implements Scree
     
     if ( screen != null ) {
       screen.onResumed();
+      screen.onAfterResumed();
     }
     
     return screen0;
@@ -68,10 +70,12 @@ public abstract class SimpleScreenManager extends AbstractShell implements Scree
     screen.onStarted();
     screen.onResumed();
     set( screen );
+    screen.onAfterResumed();
   }
   
   private void doClose() {
     final Shell screen = current();
+    screen.onBeforePaused();
     unset();
     screen.onPaused();
     screen.onStopped();

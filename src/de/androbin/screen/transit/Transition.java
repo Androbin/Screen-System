@@ -1,14 +1,16 @@
 package de.androbin.screen.transit;
 
-public class Transition {
+public abstract class Transition {
   private float time;
-  public final float crossing;
   public final float duration;
   
-  public Transition( final float crossing, final float duration ) {
-    this.crossing = crossing;
+  public Transition( final float duration ) {
     this.duration = duration;
   }
+  
+  public abstract float getPauseTime();
+  
+  public abstract float getResumeTime();
   
   public final float getTime() {
     return time;
@@ -19,8 +21,17 @@ public class Transition {
   }
   
   public enum Type {
-    CALL,
-    CLOSE,
-    SWITCH;
+    CALL( false, true ),
+    CLOSE( true, false ),
+    SWITCH( true, true ),
+    CONFIG( false, false );
+    
+    public final boolean pop;
+    public final boolean push;
+    
+    private Type( final boolean pop, final boolean push ) {
+      this.pop = pop;
+      this.push = push;
+    }
   }
 }
